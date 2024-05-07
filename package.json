@@ -1,0 +1,23 @@
+{
+	"name": "ezhs",
+	"version": "1.0.0",
+	"description": "Easy HTTP Server",
+	"main": "./src/index.js",
+	"type": "module",
+	"bin": {
+		"ezhs": "./bin/cli.js"
+	},
+	"scripts": {
+		"example": "node ./example/example.js",
+		"build": "npx ncc build ./src/index.ts -o ./dist",
+		"test": "npx vitest"
+	},
+	"author": "",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/node": "^20.12.8",
+		"@vercel/ncc": "^0.38.1",
+		"typescript": "^5.4.5",
+		"vitest": "^1.6.0"
+	}
+}
