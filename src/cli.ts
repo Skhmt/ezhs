@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
-import ezhs from '../dist/index.js';
+import ezhs, { ezServer } from './index';
 
-const server = ezhs();
+const server: ezServer = ezhs();
 
-const help = `
+const help: string = `
 Easy HTTP Server
 
 	Options:
-		-d, --dir       Sets the directory to host static files, defaults to "./public"
+		-d, --dir       Sets the directory to host static files, defaults to the current directory
 		-p, --port      Sets the port for the server to run on, defaults to 80
 		-g, --gzip      Disables gzip
 		-c, --cors      Set the CORS URL or let it default to "*"
@@ -27,11 +27,11 @@ Easy HTTP Server
 // put args into `args` and ignore the paths
 const [, , ...args] = process.argv;
 
-let port = 80;
+let port: number = 80;
 
 // parse args
-for (let i = 0; i < args.length; i++) {
-	const argLowerCase = args[i].toLocaleLowerCase();
+for (let i: number = 0; i < args.length; i++) {
+	const argLowerCase: string = args[i].toLocaleLowerCase();
 	switch (argLowerCase) {
 		case '-d':
 		case '--dir':
@@ -50,7 +50,7 @@ for (let i = 0; i < args.length; i++) {
 		case '-p':
 		case '--port':
 			if (i < args.length - 1) {
-				const nextArgNumber = Number(args[i + 1]) | 0;
+				const nextArgNumber: number = Number(args[i + 1]) | 0;
 				if (nextArgNumber) {
 					port = nextArgNumber;
 					i++;
@@ -90,12 +90,12 @@ for (let i = 0; i < args.length; i++) {
 		case '--help':
 			console.log(help);
 			process.exit();
-			break;
+		// break;
 		default:
 			console.log('Error: unknown option');
 			console.log(help);
 			process.exit();
-			break;
+		// break;
 	}
 }
 

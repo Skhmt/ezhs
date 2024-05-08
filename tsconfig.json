@@ -1,7 +1,7 @@
 {
 	"include": [
 		"src/**/*.ts"
-	],
+, "test/frontSplit.test.ts", "test/index.test.ts", "test/log.test.ts", "test/timestamp.test.ts"	],
 	"compilerOptions": {
 		"allowJs": true,
 		"outDir": "build",

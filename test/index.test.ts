@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, test } from 'vitest';
-import ezhs from './index';
+import ezhs from '../src/index';
 
 const server = ezhs();
 server.path('./example/public');
@@ -260,3 +260,58 @@ describe('ezhs POST', () => {
 	});
 });
 
+describe('ezhs PUT', () => {
+	let response: Response;
+	let body: String;
+
+	beforeAll(async () => {
+		response = await fetch('http://localhost/', { method: 'PUT', body: 'hello world' });
+		body = await response.text();
+	}, BEFORE_ALL_TIMEOUT);
+
+	test('should have a response status 405', () => {
+		expect(response.status).toBe(405);
+	});
+});
+
+describe('ezhs DELETE', () => {
+	let response: Response;
+	let body: String;
+
+	beforeAll(async () => {
+		response = await fetch('http://localhost/', { method: 'DELETE', body: 'hello world' });
+		body = await response.text();
+	}, BEFORE_ALL_TIMEOUT);
+
+	test('should have a response status 405', () => {
+		expect(response.status).toBe(405);
+	});
+});
+
+describe('ezhs OPTIONS', () => {
+	let response: Response;
+	let body: String;
+
+	beforeAll(async () => {
+		response = await fetch('http://localhost/', { method: 'OPTIONS', body: 'hello world' });
+		body = await response.text();
+	}, BEFORE_ALL_TIMEOUT);
+
+	test('should have a response status 405', () => {
+		expect(response.status).toBe(405);
+	});
+});
+
+describe('ezhs PATCH', () => {
+	let response: Response;
+	let body: String;
+
+	beforeAll(async () => {
+		response = await fetch('http://localhost/', { method: 'PATCH', body: 'hello world' });
+		body = await response.text();
+	}, BEFORE_ALL_TIMEOUT);
+
+	test('should have a response status 405', () => {
+		expect(response.status).toBe(405);
+	});
+});

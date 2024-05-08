@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 
-import frontSplit from "./frontSplit";
+import frontSplit from "../src/frontSplit";
 
 describe("frontSplit", () => {
 	test("should return the whole string if the character is not found", () => {

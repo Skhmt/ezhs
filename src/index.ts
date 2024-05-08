@@ -15,8 +15,9 @@ import { Transform } from 'node:stream';
 // #region Variables
 const mimeTypes: Map<string, string> = new Map(mime as [string, string][]);
 const minGzSize: number = 1400; // 150 bytes is strictly bad, > 1000 is usually good
+const defaultPort: number = 80;
 
-let staticPath: string = './public';
+let staticPath: string = './';
 let headers: Map<string, string> = new Map();
 let doGzip: boolean = true;
 let doSecurityHeaders: boolean = true;
@@ -175,16 +176,19 @@ function handler(request: IncomingMessage, response: ServerResponse): void {
 // #endregion Handler
 
 // #region Exports
-export default function () {
+export interface ezServer {
+	listen(port?: number): ezServer;
+	close(fn: () => void): void;
+	path(newPath: string): ezServer | void;
+	headers(arr: [string, any][]): ezServer;
+	gzip(): ezServer;
+	security(): ezServer;
+	cors(url?: string): ezServer;
+}
+
+export default function (): ezServer {
 	return {
-		/**
-		 * Starts the server and listens on the specified port.
-		 *
-		 * @param {number} [port=80] - The port number to listen on. Defaults to 80.
-		 * @return {object} - The current object instance.
-		 * @throws {Error} - If the specified port is already in use.
-		 */
-		listen(port = 80): object {
+		listen(port?: number): ezServer {
 			server = createServer(handler);
 
 			server.on('error', (err: any) => {
@@ -196,31 +200,18 @@ export default function () {
 				}
 			});
 
-			server.listen(port, () => {
+			server.listen(port || defaultPort, () => {
 				console.log(`${time(new Date())} Server running on port ${port} - hosting from "${staticPath}"`);
 			});
 
 			return this;
 		},
-		/**
-		 * Closes the server with an optional callback function.
-		 *
-		 * @param {() => void} fn - Optional callback function.
-		 * @return {void} No return value.
-		 */
 		close(fn: () => void): void {
 			if (server && server.close) {
 				fn ? server.close(fn) : server.close();
 			}
 		},
-		/**
-		 * Sets the path to the specified directory if it exists.
-		 *
-		 * @param {string} newPath - The path to the directory.
-		 * @return {any} The current object instance.
-		 * @throws {Error} If the specified path is not a directory or does not exist.
-		 */
-		path(newPath: string): any {
+		path(newPath: string): ezServer | void {
 			try {
 				const pathStats: Stats = lstatSync(newPath);
 
@@ -243,41 +234,19 @@ export default function () {
 				}
 			}
 		},
-		/**
-		 * Sets headers from an array of key-value pairs.
-		 *
-		 * @param {[string, any][]} arr - Array of key-value pairs for headers
-		 * @return {object} The current object instance
-		 */
-		headers(arr: [string, any][]): object {
+		headers(arr: [string, any][]): ezServer {
 			headers = new Map(arr);
 			return this;
 		},
-		/**
-		 * Disables gzip compression.
-		 *
-		 * @return {object} The current object instance.
-		 */
-		gzip(): object {
+		gzip(): ezServer {
 			doGzip = false;
 			return this;
 		},
-		/**
-		 * Disables default non-CORS security headers.
-		 *
-		 * @return {object} The current object instance.
-		 */
-		security(): object {
+		security(): ezServer {
 			doSecurityHeaders = false;
 			return this;
 		},
-		/**
-		 * Sets the CORS URL or defaults to "*".
-		 *
-		 * @param {string} url - The URL for CORS. If not provided, defaults to "*".
-		 * @return {object} The current object instance.
-		 */
-		cors(url: string): object {
+		cors(url?: string): ezServer {
 			corsURL = url ? url : '*';
 			return this;
 		},

@@ -31,7 +31,7 @@
 
 `.close(callback)` - Closes the server, calls the callback function when when the server closes (after all connections are finished)
 
-`.path('/path/to/static/files')` - Default: "./public"
+`.path('/path/to/static/files')` - Defaults to the current directory
 
 `.gzip()` - Disable gzip compression
 
@@ -67,11 +67,13 @@ Listens on port 80, includes XSS headers
 
 ## Use via commandline
 
-`npm link`
+`npm i -g ezhs`
+
+`ezhs`
 
 ```
     Options:
-        -d, --dir       Sets the directory to host static files, defaults to "./public"
+        -d, --dir       Sets the directory to host static files, defaults to the current directory
         -p, --port      Sets the port for the server to run on, defaults to 80
         -g, --gzip      Disables gzip
         -c, --cors      Set the CORS URL or let it default to "*"
@@ -90,3 +92,8 @@ Listens on port 80, includes XSS headers
 ## Testing
 
 `npm run test`
+
+## Todo
+
+- custom error pages
+- https maybe

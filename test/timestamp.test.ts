@@ -1,4 +1,4 @@
-import timestamp from './timestamp';
+import timestamp from '../src/timestamp';
 
 import { describe, test, expect } from 'vitest';
 

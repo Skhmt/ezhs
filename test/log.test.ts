@@ -2,7 +2,7 @@ import { describe, test, expect, vi } from "vitest";
 
 import { IncomingMessage, ServerResponse } from "http";
 
-import log from "./log";
+import log from "../src/log";
 
 describe("log", () => {
 	// const originalConsoleLog = console.log;

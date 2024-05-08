@@ -1,36 +1,10 @@
-import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
-/******/ // The require scope
-/******/ var __nccwpck_require__ = {};
-/******/ 
-/************************************************************************/
-/******/ /* webpack/runtime/define property getters */
-/******/ (() => {
-/******/ 	// define getter functions for harmony exports
-/******/ 	__nccwpck_require__.d = (exports, definition) => {
-/******/ 		for(var key in definition) {
-/******/ 			if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
-/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 			}
-/******/ 		}
-/******/ 	};
-/******/ })();
-/******/ 
-/******/ /* webpack/runtime/hasOwnProperty shorthand */
-/******/ (() => {
-/******/ 	__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ })();
-/******/ 
+#!/usr/bin/env nodeimport { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
 /******/ /* webpack/runtime/compat */
 /******/ 
 /******/ if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = new URL('.', import.meta.url).pathname.slice(import.meta.url.match(/^file:\/\/\/\w:/) ? 1 : 0, -1) + "/";
 /******/ 
 /************************************************************************/
 var __webpack_exports__ = {};
-
-// EXPORTS
-__nccwpck_require__.d(__webpack_exports__, {
-  "Z": () => (/* binding */ src)
-});
 
 ;// CONCATENATED MODULE: external "node:fs"
 const external_node_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
@@ -314,5 +288,95 @@ function handler(request, response) {
 }
 // #endregion Exports
 
-var __webpack_exports__default = __webpack_exports__.Z;
-export { __webpack_exports__default as default };
+;// CONCATENATED MODULE: ./src/cli.ts
+
+const cli_server = src();
+const help = `
+Easy HTTP Server
+
+	Options:
+		-d, --dir       Sets the directory to host static files, defaults to the current directory
+		-p, --port      Sets the port for the server to run on, defaults to 80
+		-g, --gzip      Disables gzip
+		-c, --cors      Set the CORS URL or let it default to "*"
+		-s, --security	Disables default non-CORS headers
+		-h, --help      Displays this help message
+
+	Example:
+		ezhs
+			Runs the server with default values (no CORS)
+		ezhs -p 8080 -d ./web -g -c
+			Uses port 8080, serves from "./web", disables gzip, enables CORS from all domains
+		ezhs -c http://www.google.com
+			Enables CORS from a specific origin
+`;
+// put args into `args` and ignore the paths
+const [, , ...args] = process.argv;
+let port = 80;
+// parse args
+for (let i = 0; i < args.length; i++) {
+    const argLowerCase = args[i].toLocaleLowerCase();
+    switch (argLowerCase) {
+        case '-d':
+        case '--dir':
+            if (i < args.length - 1 &&
+                args[i + 1][0] !== '-') {
+                cli_server.path(args[i + 1]);
+                i++;
+            }
+            else {
+                console.log('Error: no directory given');
+                process.exit();
+            }
+            break;
+        case '-p':
+        case '--port':
+            if (i < args.length - 1) {
+                const nextArgNumber = Number(args[i + 1]) | 0;
+                if (nextArgNumber) {
+                    port = nextArgNumber;
+                    i++;
+                }
+                else {
+                    console.log('Error: port not a number');
+                    process.exit();
+                }
+            }
+            else {
+                console.log('Error: no port given');
+                process.exit();
+            }
+            break;
+        case '-g':
+        case '--gzip':
+            cli_server.gzip();
+            break;
+        case '-s':
+        case '--security':
+            cli_server.security();
+            break;
+        case '-c':
+        case '--cors':
+            if (i < args.length - 1 &&
+                args[i + 1][0] !== '-') {
+                cli_server.cors(args[i + 1]);
+                i++;
+            }
+            else {
+                cli_server.cors();
+            }
+            break;
+        case '-h':
+        case '--help':
+            console.log(help);
+            process.exit();
+        // break;
+        default:
+            console.log('Error: unknown option');
+            console.log(help);
+            process.exit();
+        // break;
+    }
+}
+cli_server.listen(port);
+
